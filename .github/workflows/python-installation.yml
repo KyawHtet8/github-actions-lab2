@@ -2,25 +2,40 @@ name: Installing Python
 
 on:
   push:
-    branches: main
+    branches: [ main ] # တွန်းတင်လိုက်သောအခါ main branch ကိုသာ လုပ်ဆောင်ရန်
   workflow_dispatch:
-
-  
+    # လက်ဖြင့် စတင်ရန် ခွင့်ပြုသည်
 
 jobs:
   build:
     strategy:
       matrix:
+        # မတူညီသော OS နှင့် Python ဗားရှင်းများပေါ်တွင် စမ်းသပ်ရန်
         os: [ ubuntu-latest, macos-14, windows-latest ]
         py: [ 3.10, 3.11, 3.12 ]
     runs-on: ${{ matrix.os}}
     steps:
-    
-    - name: Checkout code
+    - name: Checkout repository
+      # repository မှ ကုဒ်များကို ရယူသည်
       uses: actions/checkout@v4
-    - name: Set up Python
+
+    - name: Set up Python ${{ matrix.py }}
+      # မက်ထရစ်မှ သတ်မှတ်ထားသော Python ဗားရှင်းကို တည်ဆင်သည်
       uses: actions/setup-python@v5
       with:
-        python-version: ${{matrix.py}}
+        python-version: ${{ matrix.py }}
+        # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည်
         cache: 'pip'
+
+    - name: Install dependencies
+      # လိုအပ်သော packages များရှိသည်ဟု ယူဆကာ requirements.txt မှ ထည့်သွင်းသည်
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
         
+    - name: Run tests
+      # သင့် project တွင် 'pytest' ဖြင့် စမ်းသပ်မှုများ ရှိသည်ဟု ယူဆကာ လုပ်ဆောင်သည်
+      run: |
+        # ဥပမာ: pytest ကို install လုပ်ပြီး စမ်းသပ်မှုများ ပြုလုပ်ရန်
+        pip install pytest
+        pytest

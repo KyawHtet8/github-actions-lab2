@@ -10,32 +10,39 @@ jobs:
   build:
     strategy:
       matrix:
-        # မတူညီသော OS နှင့် Python ဗားရှင်းများပေါ်တွင် စမ်းသပ်ရန်
+        # os key ဖြင့် မတူညီသော OS များကို သတ်မှတ်သည်
         os: [ ubuntu-latest, macos-14, windows-latest ]
-        py: [ 3.10, 3.11, 3.12 ]
-    runs-on: ${{ matrix.os}}
+        # py-version key ဖြင့် Python ဗားရှင်းများကို သတ်မှတ်သည်
+        py-version: [ 3.10, 3.11, 3.12 ]
+    runs-on: ${{ matrix.os}} # matrix.os တန်ဖိုးကို အသုံးပြုသည်
     steps:
     - name: Checkout repository
       # repository မှ ကုဒ်များကို ရယူသည်
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.py }}
+    - name: Set up Python ${{ matrix.py-version }} # matrix.py-version တန်ဖိုးကို ပြသသည်
       # မက်ထရစ်မှ သတ်မှတ်ထားသော Python ဗားရှင်းကို တည်ဆင်သည်
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.py }}
+        python-version: ${{ matrix.py-version }} # matrix.py-version တန်ဖိုးကို ထည့်သွင်းသည်
         # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည်
         cache: 'pip'
 
     - name: Install dependencies
-      # လိုအပ်သော packages များရှိသည်ဟု ယူဆကာ requirements.txt မှ ထည့်သွင်းသည်
+      # requirements.txt ဖိုင်ရှိမရှိ စစ်ဆေးပြီးမှသာ packages များကို ထည့်သွင်းမည် (ဖိုင်မရှိပါက ကျော်သွားမည်)
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        
+        # requirements.txt ရှိမှသာ install လုပ်ရန် စစ်ဆေးသည်
+        if [ -f requirements.txt ]; then
+          echo "Installing dependencies from requirements.txt"
+          pip install -r requirements.txt
+        else
+          echo "requirements.txt not found. Skipping dependency installation from file."
+        fi
         
     - name: Run tests
-      # သင့် project တွင် 'pytest' ဖြင့် စမ်းသပ်မှုများ ရှိသည်ဟု ယူဆကာ လုပ်ဆောင်သည်
+      # စမ်းသပ်မှုများ လုပ်ဆောင်ရန် pytest ကို install လုပ်ပြီး run သည်
       run: |
-        # ဥပမာ: pytest ကို install လုပ်ပြီး စမ်းသပ်မှုများ ပြုလုပ်ရန်
         pip install pytest
         pytest

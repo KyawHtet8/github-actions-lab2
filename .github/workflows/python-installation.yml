@@ -25,8 +25,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.py-version }} # matrix.py-version တန်ဖိုးကို ထည့်သွင်းသည်
-        # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည်
-        cache: 'pip'
+        # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည် (ဖိုင်မရှိသဖြင့် ဖယ်ရှားလိုက်သည်)
 
     - name: Install dependencies
       # requirements.txt ဖိုင်ရှိမရှိ စစ်ဆေးပြီးမှသာ packages များကို ထည့်သွင်းမည် (ဖိုင်မရှိပါက ကျော်သွားမည်)

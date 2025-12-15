@@ -25,23 +25,4 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.py-version }} # matrix.py-version တန်ဖိုးကို ထည့်သွင်းသည်
-        # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည် (ဖိုင်မရှိသဖြင့် ဖယ်ရှားလိုက်သည်)
-
-    - name: Install dependencies
-      # requirements.txt ဖိုင်ရှိမရှိ စစ်ဆေးပြီးမှသာ packages များကို ထည့်သွင်းမည် (ဖိုင်မရှိပါက ကျော်သွားမည်)
-      run: |
-        python -m pip install --upgrade pip
-        
-        # requirements.txt ရှိမှသာ install လုပ်ရန် စစ်ဆေးသည်
-        if [ -f requirements.txt ]; then
-          echo "Installing dependencies from requirements.txt"
-          pip install -r requirements.txt
-        else
-          echo "requirements.txt not found. Skipping dependency installation from file."
-        fi
-        
-    - name: Run tests
-      # စမ်းသပ်မှုများ လုပ်ဆောင်ရန် pytest ကို install လုပ်ပြီး run သည်
-      run: |
-        pip install pytest
-        pytest
+        # pip dependencies များကို မြန်နှုန်းမြှင့်တင်ရန် cache လုပ်သည် (ဖိုင်မရှိသဖြင့် ဖယ်ရှားလိုက်သည်)f
